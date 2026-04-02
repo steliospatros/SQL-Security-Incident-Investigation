@@ -1,33 +1,42 @@
-# Security Incident Investigation via SQL Data Filtering
+Security Incident Investigation via SQL Data Filtering
+1. Project Overview
+This project demonstrates the application of SQL queries to filter, analyze, and retrieve critical security data from a relational database. The objective was to investigate potential security incidents and identify specific employee devices requiring immediate security patches.
 
-## 1. Project Overview
-This project demonstrates the application of SQL queries to filter, analyze, and retrieve critical security data from a relational database. [cite_start]The objective was to investigate potential security incidents and identify specific employee devices requiring immediate security patches[cite: 180, 181]. 
+The tasks involved querying connection logs and employee records to isolate anomalous activities, such as after-hours failed logins and out-of-scope geographical access attempts.
 
-[cite_start]The tasks involved querying connection logs and employee records to isolate anomalous activities, such as after-hours failed logins and out-of-scope geographical access attempts[cite: 184, 205, 272].
+2. Tools & Environment
+Database Management System: MariaDB
 
-## 2. Tools & Environment
-* **Database Management System:** MariaDB
-* **Language:** SQL
-* [cite_start]**Techniques:** Data filtering (WHERE clause), Logical operators (AND, OR, NOT), Pattern matching (LIKE, % wildcard)[cite: 274, 275].
+Language: SQL
 
-## 3. Security Scenarios & Query Execution
+Techniques: Data filtering (WHERE clause), Logical operators (AND, OR, NOT), Pattern matching (LIKE, % wildcard).
 
-### Scenario A: Investigating After-Hours Failed Login Attempts
-[cite_start]To identify potential brute-force attacks or unauthorized access attempts occurring outside standard business hours, the `log_in_attempts` table was filtered for unsuccessful events after 18:00[cite: 184, 185].
+3. Security Scenarios & Query Execution
+Scenario A: Investigating After-Hours Failed Login Attempts
+To identify potential brute-force attacks or unauthorized access attempts occurring outside standard business hours, the log_in_attempts table was filtered for unsuccessful events after 18:00.
 
-```sql
+SQL
 -- Retrieve all failed login attempts occurring post-18:00
 SELECT * FROM log_in_attempts 
 WHERE login_time > '18:00' AND success = FALSE;
-Scenario B: Tracking Anomalous Geographic Login ActivityLogin attempts originating outside expected operational regions (Mexico) were isolated for further incident response investigation.SQL-- Filter login logs to exclude traffic originating from Mexico
+Scenario B: Tracking Anomalous Geographic Login Activity
+Login attempts originating outside expected operational regions (Mexico) were isolated for further incident response investigation.
+
+SQL
+-- Filter login logs to exclude traffic originating from Mexico
 -- Uses the LIKE operator with a wildcard to account for data format variations (MEX / MEXICO)
 SELECT * FROM log_in_attempts 
 WHERE NOT country LIKE 'MEX%';
-Scenario C: Identifying Target Machines for Security PatchingSpecific organizational departments required critical workstation updates. Queries were designed to accurately pull employee and device information based on department and physical location parameters.SQL-- Isolate employee machines in the Marketing department located in the East building
+Scenario C: Identifying Target Machines for Security Patching
+Specific organizational departments required critical workstation updates. Queries were designed to accurately pull employee and device information based on department and physical location parameters.
+
+SQL
+-- Isolate employee machines in the Marketing department located in the East building
 SELECT * FROM employees 
 WHERE department = 'Marketing' AND office LIKE 'East%';
 
 -- Retrieve all employees outside of the IT department for standard patch rollout
 SELECT * FROM employees 
 WHERE NOT department = 'Information Technology';
-4. Key TakeawaysThis project highlights the ability to efficiently parse large datasets to extract actionable security intelligence. The strategic use of SQL logical operators ensures precise threat hunting and streamlined IT asset management workflows.
+4. Key Takeaways
+This project highlights the ability to efficiently parse large datasets to extract actionable security intelligence. The strategic use of SQL logical operators ensures precise threat hunting and streamlined IT asset management workflows.
